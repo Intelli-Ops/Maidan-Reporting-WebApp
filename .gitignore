@@ -1,0 +1,21 @@
+node_modules/
+data/
+*.txt
+.claude/
+# Secrets - never commit. Tracking this file published the database
+# password, JWT secret and API keys to a public repo, and Google auto-revoked
+# the leaked Gemini key. Use .env.example to carry config between machines.
+.env
+.env.*
+!.env.example
+# Tracked deliberately: it holds only VITE_USE_MOCKS=true, which is what makes
+# `npm run dev:mock` work. Without this exception the file is tracked here but
+# silently dropped by a fresh `git add` anywhere else, so a clone of this repo
+# loses mock mode with no sign of why.
+!frontend/.env.mock
+
+# Client business data. Same reasoning as data/ above: these workbooks carry
+# real revenue, expense and investor figures. They belong on the machine doing
+# the import, not in the repository.
+July-data-upload/
+*-data-upload/

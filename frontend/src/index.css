@@ -1,0 +1,354 @@
+@import "tailwindcss";
+
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/syne/600.css";
+@import "@fontsource/syne/700.css";
+@import "@fontsource/syne/800.css";
+@import "@fontsource/instrument-serif/400.css";
+@import "@fontsource/instrument-serif/400-italic.css";
+
+@theme {
+  /* Light content surfaces — dashboards, tables, forms */
+  --color-canvas: #eceef0;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f0f2ef;
+  --color-border: #dde3de;
+  --color-ink: #0b1b14;
+  --color-ink-muted: #66716b;
+  --color-ink-faint: #9ba5a0;
+  --color-label: #3a453f;
+
+  /* Brand accents */
+  --color-blue: #185fa5;
+  --color-blue-bright: #378add;
+  --color-blue-soft: #e7f1fb;
+  --color-green: #3b6d11;
+  --color-mint: #5dcaa5;
+  --color-mint-soft: #e3f5ef;
+  /* Darkened mint for text sitting on a mint-soft fill. --color-mint itself is
+     a fill color: on #e3f5ef it lands around 1.9:1, which is fine for a bar or
+     a dot but not for the 12px label inside a trend pill. */
+  --color-mint-deep: #17795c;
+  --color-amber: #d9a441;
+  --color-amber-soft: #fbf1df;
+  /* Same reason as --color-mint-deep: --color-amber is a fill, and on
+     amber-soft it lands near 2:1 — fine behind a bar, unreadable as a label. */
+  --color-amber-deep: #8a5a06;
+  --color-red: #e15b5b;
+  --color-red-soft: #fbe9e9;
+  --color-live: #4ade80;
+
+  /* Dark brand-panel surfaces — auth hero, sidebar */
+  --color-night-1: #041521;
+  --color-night-2: #06251f;
+  --color-night-3: #0c3320;
+  --color-night-4: #123c1a;
+  --color-night-ink: #ffffff;
+  --color-night-border: rgb(255 255 255 / 0.14);
+  --color-night-glass: rgb(255 255 255 / 0.08);
+
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Editorial accent — page-level titles only (PageHeader), never body/UI text. */
+  --font-editorial: "Instrument Serif", ui-serif, Georgia, serif;
+
+  --ease-maidan: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --animate-toast-in: toast-in 320ms var(--ease-maidan);
+  --animate-kpi-in: kpi-in 400ms var(--ease-maidan);
+  --animate-glow-drift: glow-drift 14s ease-in-out infinite alternate;
+  --animate-badge-glow: badge-glow 2.6s ease-in-out infinite;
+  --animate-shine-sweep: shine-sweep 3.6s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-scene-cycle: scene-cycle 6s ease-in-out infinite;
+  --animate-ball-drop: drop-and-become 6s cubic-bezier(0.3, 0.05, 0.25, 1) infinite;
+  --animate-ken-burns: ken-burns 34s ease-in-out infinite;
+}
+
+/* Slow push-in/drift on the Overview hero photograph. Kept under 1.14x so
+   the courts never soften — the point is that the frame breathes, not that
+   it visibly zooms. Paired with a still fallback under reduced-motion. */
+@keyframes ken-burns {
+  0% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.13) translate3d(-1.6%, -1.4%, 0);
+  }
+  100% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes kpi-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(30px, -20px) scale(1.08);
+  }
+}
+
+@keyframes badge-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 2px 14px rgb(0 0 0 / 0.16),
+      0 0 0px rgb(93 202 165 / 0),
+      0 0 0px rgb(55 138 221 / 0);
+  }
+  50% {
+    box-shadow:
+      0 2px 14px rgb(0 0 0 / 0.16),
+      0 0 22px 4px rgb(93 202 165 / 0.55),
+      0 0 36px 10px rgb(55 138 221 / 0.4);
+  }
+}
+
+@keyframes shine-sweep {
+  0% {
+    left: -60%;
+  }
+  45% {
+    left: 130%;
+  }
+  100% {
+    left: 130%;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* Court-line draw sequence — each element's stroke draws in turn, then the
+   whole scene fades and the cycle restarts in sync with the ball animation. */
+@keyframes draw-rect-1 {
+  0%,
+  14.17% {
+    stroke-dashoffset: 2400;
+  }
+  35.83%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes draw-line-1 {
+  0%,
+  20% {
+    stroke-dashoffset: 2400;
+  }
+  36.67%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes draw-line-2 {
+  0%,
+  23.33% {
+    stroke-dashoffset: 2400;
+  }
+  38.33%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes draw-rect-2 {
+  0%,
+  26.67% {
+    stroke-dashoffset: 2400;
+  }
+  41.67%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes scene-cycle {
+  0%,
+  80% {
+    opacity: 1;
+  }
+  90%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes drop-and-become {
+  0% {
+    transform: translateY(-260px);
+    r: 9;
+    fill-opacity: 1;
+    stroke-opacity: 0;
+  }
+  14.93% {
+    transform: translateY(0px);
+    r: 9;
+    fill-opacity: 1;
+    stroke-opacity: 0;
+  }
+  18.67% {
+    transform: translateY(-14px);
+    r: 10;
+    fill-opacity: 1;
+    stroke-opacity: 0;
+  }
+  21.47% {
+    transform: translateY(0px);
+    r: 9;
+    fill-opacity: 1;
+    stroke-opacity: 0;
+  }
+  46.67% {
+    transform: translateY(0px);
+    r: 60;
+    fill-opacity: 0;
+    stroke-opacity: 0.45;
+  }
+  100% {
+    transform: translateY(0px);
+    r: 60;
+    fill-opacity: 0;
+    stroke-opacity: 0.45;
+  }
+}
+
+@layer components {
+  /* Frosted tile: translucent surface + backdrop blur over the page's grey
+     wash, instead of a flat opaque card. Kept deliberately plain — one grey
+     tone, no color tint, no border glow — so it reads as "frosted glass"
+     rather than glassmorphism-as-decoration. Shared by every reporting card
+     so dashboards read as one consistent tile language. */
+  .card-surface {
+    border-radius: 20px;
+    border: 1px solid rgb(255 255 255 / 0.6);
+    background-color: rgb(255 255 255 / 0.55);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    box-shadow:
+      0 1px 2px rgb(16 24 40 / 0.04),
+      0 8px 24px -6px rgb(16 24 40 / 0.1);
+  }
+
+  /* Soft, static color wash for the dashboard shell — the frosted tiles
+     blur against this. Flat grey alone gives backdrop-filter nothing to
+     catch, so cards would look merely translucent rather than "frosted." */
+  .frosted-canvas {
+    background-color: var(--color-canvas);
+    background-image:
+      radial-gradient(circle at 12% -8%, rgb(24 95 165 / 0.08), transparent 40%),
+      radial-gradient(circle at 88% 8%, rgb(93 202 165 / 0.07), transparent 38%),
+      radial-gradient(circle at 50% 100%, rgb(24 95 165 / 0.05), transparent 45%);
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Tabular numerals everywhere numbers matter: KPIs, tables, reporting */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Cross-document-feel page transitions for in-app navigation. Only links
+   that opt in (react-router's `viewTransition` prop) trigger these, so the
+   rest of the app still navigates instantly. Browsers without the View
+   Transitions API ignore the whole block and fall back to a hard cut. */
+::view-transition-old(root) {
+  animation: vt-out 200ms var(--ease-maidan) both;
+}
+
+::view-transition-new(root) {
+  animation: vt-in 320ms var(--ease-maidan) both;
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: scale(0.99);
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: scale(1.008) translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* The global rule above collapses the duration but leaves the animation
+     running; on the infinite Ken Burns loop that pins the photo at its
+     mid-keyframe (13% zoomed). Drop the animation entirely instead. */
+  .animate-ken-burns {
+    animation: none !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}

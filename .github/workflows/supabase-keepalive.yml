@@ -1,0 +1,61 @@
+name: Keep-alive
+
+# Three things that fail silently, each of which would only surface at the
+# worst possible moment:
+#   - Supabase pauses a project after ~7 days idle (the whole API goes down)
+#   - Brevo deactivates an API key after 90 days of no calls (forgot-password
+#     starts 401ing exactly when a locked-out user needs it)
+#   - a deployment stops keeping up with the repository, and serves an old
+#     build while answering every request with a healthy 200
+# Daily is far more often than the first two need, but the runs are free and a
+# generous margin means a few skipped schedules don't matter.
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  supabase:
+    name: Supabase database
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install pg --no-save
+      - run: node scripts/ping_supabase.js
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+  brevo:
+    name: Brevo API key
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # Node 20+ for global fetch, which ping_brevo.js uses instead of
+          # pulling in an HTTP dependency.
+          node-version: 20
+      - run: node scripts/ping_brevo.js
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+
+  deployment:
+    name: Live site is running the latest commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # Node 20+ for global fetch, same reason as the Brevo job.
+          node-version: 20
+      # Compares the commit the LIVE service reports against the head of this
+      # branch. This is the check that was missing when the frontend quietly
+      # stopped deploying for two months — see scripts/check_deployment.js.
+      - run: node scripts/check_deployment.js
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          EXPECTED_COMMIT: ${{ github.sha }}

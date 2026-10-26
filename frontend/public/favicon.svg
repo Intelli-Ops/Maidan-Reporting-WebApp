@@ -1,0 +1,26 @@
+<!--
+  Maidan tab icon.
+
+  The wordmark is a wide 2.16:1 lockup in black on transparent, so it cannot be
+  the favicon on its own: a bare wordmark gets letterboxed into a sliver in a
+  square tab slot, and black-on-transparent vanishes entirely against a
+  dark-mode tab strip. Both problems are solved the same way the app itself
+  solves them — Sidebar and BrandPanel always seat this logo on the pale mint
+  pill, so the pill is reused here rather than invented for the icon.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="pill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F8FAF9"/>
+      <stop offset="1" stop-color="#E7F2ED"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#pill)"/>
+  <!-- The app draws this edge in white/70 because it sits on a coloured panel.
+       A tab strip can be white, so the icon needs an edge that is darker than
+       the pill instead, or it dissolves into the browser chrome. -->
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="13.25" fill="none" stroke="#D3E4DB" stroke-width="1.5"/>
+  <image
+    x="6" y="19.94" width="52" height="24.12"
+    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEUAAAAgCAYAAABEtLXAAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAKwSURBVHgB7Vn/ddowEP6S1/9LJ6gyAXQDdYLQCXAnKBvYnSDpBNAJwgbQCWgnwBuYDagvFkU+n36lEMKP7717NtKn8+l00p0N4MZDLVUtq1pyxENb40Y4I4xr2TDRkWOX1pgKJ4hbR/u90KYRh57j/mTgcsovoe03Lhy0wnQmbLdBkTDWHrfBGWKA9C1w9k55CU7eKbe4ooOrUwRcilM0mmLU3tpUQz3VkrkG9ZB2oPq4KWeKQhoU0vGAbiHKZc5151bnOOEhNPmB0B/rlLmlR8EPZemlijl2AScIO2Qj2VGxDh8GTNFM4MQ4Zcg4j/CjYPwMYeSQJ18JNtoR83ym2F5XgQfxFXqPl2FfelxQ6DqOKvLPtXyo5c7IT8bRJO+wf6yt+xLHgUZ7gctavqBtD91naBZkaLWPDpF9vpoHknO+4zjgL7RkR+ngchsPEikUpnc4Lvj2LD1c/qKrKFLWAYWHQOoz+onje4n8DrapMeaNeIJw1iADNPxYopsRXIYrtDPkvyzh4fOsMvHwM8Yl2zrproKchUYIf41T2E1g5dCTQ06HVF1KK/zk4OeCbgV3uh1H8osb7L6dcIOm2H1sIodo1k978RNro8j5Zv0ua1kYPaT/Hv4oIv4PNFv6I5pVVJH8vuH7tsrM2OLil2jS9jN4MRUSVzSNE/W8Ncn4hIoEh0jlfaqeldGzjOTPDX8VyX9M5BeuCamAkXPEvZRlHmMqY7AdtkWAP2Y2TuF3dpbApzlpi48byBgY4tbwEs1+XCMNGu1PmmVAzxDtKFygObskvjLcLX9tuAvIUGhXuiH+FW8RFEnK0adwov8f/Q9ytM8DZdrpOrf6clwINOSsQZgIfRqvgGN/o1VCW9/T5ysF9oZjO6UU2v6Yq/TX7QwXAqpB6Czh9Qtdp5BrlYPiL/H3ksF+NcOfAAAAAElFTkSuQmCC"/>
+</svg>
