@@ -96,8 +96,12 @@ function build(files) {
     parts.push('-- ============================================================');
     // Each source file's own BEGIN/COMMIT would close the outer transaction
     // partway through, so they are stripped; the bundle supplies one.
+    // CR is stripped so the bundle is uniformly LF. The sql/ sources are
+    // CRLF on a Windows checkout and the header below is built with '\n',
+    // and mixing the two made the output differ from machine to machine.
     const body = fs
       .readFileSync(path.join(SQL_DIR, f), 'utf8')
+      .replace(/\r/g, '')
       .replace(/^[ \t]*(BEGIN|COMMIT)[ \t]*;[ \t]*$/gim, '')
       .trim();
     parts.push(body);
@@ -118,7 +122,15 @@ const next = build(files);
 
 // The generated-on timestamp changes every run, so comparing whole files
 // would always report a difference. Compare everything below the header.
-const bodyOf = (s) => s.slice(s.indexOf('BEGIN;'));
+//
+// CR is stripped on both sides first: git rewrites line endings on checkout,
+// so without this --check reports STALE on a fresh clone on Windows even
+// though the content is identical — and a check that cries wolf every time
+// is a check people learn to ignore.
+const bodyOf = (s) => {
+  const lf = s.replace(/\r/g, '');
+  return lf.slice(lf.indexOf('BEGIN;'));
+};
 
 if (CHECK_ONLY) {
   const current = fs.existsSync(OUT_FILE) ? fs.readFileSync(OUT_FILE, 'utf8') : '';

@@ -1,4 +1,4 @@
--- Maidan — full schema, generated 2026-10-26T19:01:45Z
+-- Maidan — full schema, generated 2026-10-26T19:17:02Z
 -- by scripts/build_schema_bundle.js. Do not edit by hand: edit the
 -- files in sql/ and re-run that script, or your change is lost on the
 -- next rebuild.

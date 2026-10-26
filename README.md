@@ -24,9 +24,7 @@ presented as three dashboards.
 
 **One deployment, not two.** Express serves the built frontend from
 `frontend/dist` after its API routes, so the app runs as a single service on a
-single origin. There is no separate frontend host. (The app previously ran as
-a split Vercel frontend + Render backend; `DEPLOYMENT_GUIDE.md` still describes
-that arrangement in places — see the note at the top of that file.)
+single origin. There is no separate frontend host.
 
 ---
 
@@ -206,5 +204,6 @@ scripts/                 Imports, migrations, seeding, health checks
 frontend/                React app (its own package.json)
 ```
 
-Deeper documentation lives in `DEPLOYMENT_GUIDE.md` (hosting, env vars, CORS,
-domains) and `DESIGN_SYSTEM.md` (UI conventions and chart colours).
+Each layer carries its reasoning in comments rather than in separate design
+documents — `db/pool.js`, `scripts/lib/timeSlotParser.js` and
+`frontend/src/components/reporting/colors.ts` are good places to start.
